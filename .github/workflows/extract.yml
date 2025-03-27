@@ -1,0 +1,36 @@
+name: Extract and Commit ZIP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  extract_zip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download ZIP file
+      run: wget https://github.com/officialsurjeet/Anmol-Lipi-Font-sk/raw/main/Anmol%20Lipi%20Font%20Convertor%20.zip -O Anmol_Lipi_Font_Convertor.zip
+
+    - name: Extract ZIP file
+      run: unzip Anmol_Lipi_Font_Convertor.zip -d Anmol_Lipi_Font_Convertor
+
+    - name: Copy files to repository
+      run: cp -r Anmol_Lipi_Font_Convertor/* .
+
+    - name: Configure git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+
+    - name: Commit changes
+      run: |
+        git add .
+        git commit -m "Extracted Anmol Lipi Font Convertor and added to the repository"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
